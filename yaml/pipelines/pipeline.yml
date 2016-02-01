@@ -36,6 +36,7 @@ properties:
                         Freight= h.Freight,
                         TotalDue = h.TotalDue,
                         Details = h.SalesOrderDetails.Select(d => new {
+                          SalesOrderDetailID = d.SalesOrderDetailID,
                           OrderQty = d.OrderQty,
                           ProductID = d.ProductID,
                           UnitPrice = d.UnitPrice,
