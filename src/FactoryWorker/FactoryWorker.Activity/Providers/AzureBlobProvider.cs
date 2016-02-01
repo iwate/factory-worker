@@ -18,12 +18,14 @@ namespace FactoryWorker.Activity.Providers
         IList<DataElement> Structure;
         CloudBlockBlob Blob;
         CsvConfiguration Configuration;
-        public AzureBlobProvider(Dataset dataset, LinkedService linkedService)
+        public AzureBlobProvider(Dataset dataset, LinkedService linkedService, Slice slice)
         {
             InstanceName = dataset.Name;
             Structure = (dataset.Properties as DatasetProperties).Structure;
             var azblobDataset = dataset.Properties.TypeProperties as AzureBlobDataset;
             var filepath = Path.Combine(azblobDataset.FolderPath, azblobDataset.FileName);
+            filepath = Helpers.ReplaceByPatition(filepath, azblobDataset.PartitionedBy, slice);
+
             Blob = Helpers.GetBlob(linkedService, filepath);
             var format = azblobDataset.Format as TextFormat;
             if (format != null)

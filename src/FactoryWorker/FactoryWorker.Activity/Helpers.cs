@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Management.DataFactories.Common.Models;
+﻿using FactoryWorker.Activity.Models;
+using Microsoft.Azure.Management.DataFactories.Common.Models;
 using Microsoft.Azure.Management.DataFactories.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -24,6 +25,23 @@ namespace FactoryWorker.Activity
             var container = client.GetContainerReference(filepath.Substring(0, index));
             container.CreateIfNotExists();
             return container.GetBlockBlobReference(filepath.Substring(index + 1));
+        }
+        public static string ReplaceByPatition(string str, IEnumerable<Partition> partitionedBy, Slice slice)
+        {
+            var partitions = partitionedBy.Select(_ =>
+            {
+                var dateParition = _.Value as DateTimePartitionValue;
+                var name = dateParition.Date.ToLower();
+                var value = name == "slicestart" ? slice.Start.ToString(dateParition.Format)
+                          : name == "sliceend" ? slice.End.ToString(dateParition.Format)
+                          : "";
+                return new KeyValuePair<string, string>(_.Name, value);
+            });
+            foreach (var partition in partitions)
+            {
+                str = str.Replace(partition.Key, partition.Value);
+            }
+            return str;
         }
         public static dynamic DictionaryToObject(IDictionary<string, object> record, IList<DataElement> structure)
         {

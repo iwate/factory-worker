@@ -22,7 +22,7 @@ namespace FactoryWorker.Activity.Providers
         CloudBlockBlob Blob;
         Encoding Encoding = Encoding.UTF8;
         CustomAzureBlobFormat Format;
-        public CustomAzureBlobProvider(Dataset dataset, LinkedService linkedService)
+        public CustomAzureBlobProvider(Dataset dataset, LinkedService linkedService, Slice slice)
         {
             var props = dataset.Properties.TypeProperties as CustomDataset;
             InstanceName = props.ServiceExtraProperties["instanceName"].ToString();
@@ -38,6 +38,19 @@ namespace FactoryWorker.Activity.Providers
             }
             
             var filepath = props.ServiceExtraProperties["filePath"].ToString();
+            if (props.ServiceExtraProperties.ContainsKey("partitionedBy"))
+            {
+                var partitionedBy = props.ServiceExtraProperties["partitionedBy"].Select(_ => new Partition
+                {
+                    Name = _["name"].ToString(),
+                    Value = new DateTimePartitionValue
+                    {
+                        Date = _["date"].ToString(),
+                        Format = _["format"].ToString()
+                    }
+                });
+                filepath = Helpers.ReplaceByPatition(filepath, partitionedBy, slice);
+            }
             Blob = Helpers.GetBlob(linkedService, filepath);
 
             var format = props.ServiceExtraProperties["format"];

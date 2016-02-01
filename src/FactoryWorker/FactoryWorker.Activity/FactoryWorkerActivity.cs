@@ -26,6 +26,19 @@ namespace FactoryWorker.Activity
             IEnumerable<string> outputNames = activity.Outputs.Select(_ => _.Name);
             IList<CustomDbDataset> dbDatasets = new List<CustomDbDataset>();
 
+            // convert transform properties from activity's one.
+            var dotNetActivity = (DotNetActivity)activity.TypeProperties;
+            Slice slice = new Slice
+            {
+                Start = Convert.ToDateTime(dotNetActivity.ExtendedProperties["SliceStart"]),
+                End = Convert.ToDateTime(dotNetActivity.ExtendedProperties["SliceEnd"])
+            };
+            string transform = dotNetActivity.ExtendedProperties["transform"];
+
+            logger.Write("Slice from {0} to {1}\n", slice.Start, slice.End);
+            logger.Write("Transform:\n");
+            logger.Write("{0}\n", transform);
+
             // create providers
             logger.Write("create providers\n");
             IDictionary<string, IDatasetProvider> providers =
@@ -44,12 +57,12 @@ namespace FactoryWorker.Activity
                     }
                     else if (CustomAzureBlobProvider.IsMatch(dataset, linkedService))
                     {
-                        provider = new CustomAzureBlobProvider(dataset, linkedService);
+                        provider = new CustomAzureBlobProvider(dataset, linkedService, slice);
                         logger.Write("{0} is CustomAzureBlobDataset\n", datasetName);
                     }
                     else if (AzureBlobProvider.IsMatch(dataset, linkedService))
                     {
-                        provider = new AzureBlobProvider(dataset, linkedService);
+                        provider = new AzureBlobProvider(dataset, linkedService, slice);
                         logger.Write("{0} is AzureBlobDataset\n", datasetName);
                     }
                     else
@@ -59,19 +72,6 @@ namespace FactoryWorker.Activity
 
                     return new { dataset = datasetName, provider = provider };
                 }).ToDictionary(_ => _.dataset, _ => _.provider);
-
-            // convert transform properties from activity's one.
-            var dotNetActivity = (DotNetActivity)activity.TypeProperties;
-            Slice slice = new Slice
-            {
-                Start = Convert.ToDateTime(dotNetActivity.ExtendedProperties["SliceStart"]),
-                End = Convert.ToDateTime(dotNetActivity.ExtendedProperties["SliceEnd"])
-            };
-            string transform = dotNetActivity.ExtendedProperties["transform"];
-
-            logger.Write("Slice from {0} to {1}\n", slice.Start, slice.End);
-            logger.Write("Transform:\n");
-            logger.Write("{0}\n", transform);
 
             // create model for transform razor.
             dynamic model = new ExpandoObject();
