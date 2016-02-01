@@ -9,7 +9,7 @@ properties:
       type: DotNetActivity
       inputs:
         - name: AdventureWorksLT
-      outputs
+      outputs:
         - name: OutputDataset
       linkedServiceName: FactoryWorkerBatch
       policy:
