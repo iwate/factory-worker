@@ -1,7 +1,7 @@
 #FactoryWorker
 FactoryWorker is a useful CustomActivity for [Azure DataFactory](https://azure.microsoft.com/documentation/services/data-factory/).
 This library can connect SqlServer through EntityFramework and you can write `transform code` by using C# in Razor. That is like the following pipeline settings.
-```yml:export.yml
+```yml
 name: ExportPipeline
 properties:
   activities:
@@ -352,10 +352,10 @@ properties:
 If you use other library in razor. You upload dll in zip file together and you modify `assemblies.xml`
 
 ```xml
-<utf8>
+<?xml version="1.0" encoding="utf-8" ?>
 <Assemblies>
-  <add name="EntityFramework.dll"/>
-  <add name="EntityFramework.SqlServer.dll"/>
+  <add name="EntityFramework.dll" />
+  <add name="EntityFramework.SqlServer.dll" />
   <!-- if you use other library in razor, add here and libraries are zip together.-->
 </Assemblies>
 ```
