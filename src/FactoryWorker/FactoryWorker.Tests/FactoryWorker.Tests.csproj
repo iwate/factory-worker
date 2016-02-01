@@ -111,7 +111,6 @@
     <Compile Include="FactoryWorkerReferenceResolverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FactoryWorkerRazorTest.cs" />
-    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assemblies.xml">

@@ -25,9 +25,9 @@ namespace FactoryWorker.Activity.Providers
         public CustomAzureBlobProvider(Dataset dataset, LinkedService linkedService)
         {
             var props = dataset.Properties.TypeProperties as CustomDataset;
-            InstanceName = props.ServiceExtraProperties["InstanceName"].ToString();
-            var enc = props.ServiceExtraProperties.ContainsKey("Encoding") 
-                ? props.ServiceExtraProperties["Encoding"].ToString() : null;
+            InstanceName = props.ServiceExtraProperties["instanceName"].ToString();
+            var enc = props.ServiceExtraProperties.ContainsKey("encoding") 
+                ? props.ServiceExtraProperties["encoding"].ToString() : null;
             if (!string.IsNullOrEmpty(enc))
             {
                 try
@@ -37,12 +37,12 @@ namespace FactoryWorker.Activity.Providers
                 catch (ArgumentException){}
             }
             
-            var filepath = props.ServiceExtraProperties["FilePath"].ToString();
+            var filepath = props.ServiceExtraProperties["filePath"].ToString();
             Blob = Helpers.GetBlob(linkedService, filepath);
 
-            var format = props.ServiceExtraProperties["Format"];
+            var format = props.ServiceExtraProperties["format"];
             Format = format == null ? CustomAzureBlobFormat.Unknown
-                   : format["Type"].ToString().ToLower() == "json" ? CustomAzureBlobFormat.Json
+                   : format["type"].ToString().ToLower() == "json" ? CustomAzureBlobFormat.Json
                    : CustomAzureBlobFormat.Unknown;
         }
         public static bool IsMatch(Dataset dataset, LinkedService linkedService)

@@ -21,12 +21,12 @@ namespace FactoryWorker.Activity.Providers
         public CustomDbDatasetProvider(Dataset dataset, LinkedService linkedService, Func<string, LinkedService> linkedServiceResolver)
         {
             var props = dataset.Properties.TypeProperties as CustomDataset;
-            var packageLnkedServiceName = props.ServiceExtraProperties["PackageLinkedService"].ToString();
+            var packageLnkedServiceName = props.ServiceExtraProperties["packageLinkedService"].ToString();
             Dataset = new CustomDbDataset
             {
-                InstanceName = props.ServiceExtraProperties["InstanceName"].ToString(),
-                DbContextName = props.ServiceExtraProperties["DbContextName"].ToString(),
-                AssemblyFile = props.ServiceExtraProperties["AssemblyFile"].ToString()
+                InstanceName = props.ServiceExtraProperties["instanceName"].ToString(),
+                DbContextName = props.ServiceExtraProperties["dbContextName"].ToString(),
+                AssemblyFile = props.ServiceExtraProperties["assemblyFile"].ToString()
             };
             InstanceName = Dataset.InstanceName;
 
