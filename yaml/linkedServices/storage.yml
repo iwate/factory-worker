@@ -1,0 +1,6 @@
+name: Storage
+properties:
+    description: Azure Storage's linked service
+    type: AzureStorage
+    typeProperties:
+        connectionString: BlobEndpoint=https://<account>.blob.core.windows.net/;AccountName=<account>;AccountKey=<key>

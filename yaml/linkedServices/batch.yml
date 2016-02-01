@@ -1,0 +1,11 @@
+name: FactoryWorker
+properties:
+    type: AzureBatch
+    description:
+    typeProperties:
+        accountName: <account>
+        accessKey: <key>
+        poolName: <pool>
+        batchUri: https://<region>.batch.azure.com
+        linkedServiceName: PackageStorage
+    

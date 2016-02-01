@@ -1,0 +1,54 @@
+name: ExportPipeline
+properties:
+  activities:
+    - Name: SampleFactoryWorker
+      Type: DotNetActivity
+      Inputs: 
+        - Name: SampleDb
+      Outputs:
+        - Name: Output
+      LinkedServiceName: FactoryWorker
+      typeProperties:
+        AssemblyName: FactoryWorker.Activity.dll
+        EntryPoint: FactoryWorker.Activity.FactoryWorkerActivity
+        PackageLinkedService: PackageStorage
+        PackageFile: <container>/FactoryWorker.Activity.zip
+        extendedProperties:
+          SliceStart: $$Text.Format('{0}', SliceStart)
+          SliceEnd: $$Text.Format('{0}', SliceEnd)
+          transform: |
+            @{
+              Logger("Transform Start");
+              ViewBag.Exports = AdventureWorksLT.SalesOrderHeaders
+                      .Where(_ => _.OrderDate >= Slice.Start && _.OrderDate < Slice.End)
+                      .Select(h => new {
+                        SalesOrderID = h.SalesOrderID,
+                        OrderDate = h.OrderDate,
+                        DueDate = h.DueDate,
+                        ShipDate = h.ShipDate,
+                        Status = h.Status,
+                        OnlineOrderFlag = h.OnlineOrderFlag,
+                        SalesOrderNumber = h.SalesOrderNumber,
+                        PurchaseOrderNumber = h.PurchaseOrderNumber,
+                        AccountNumber = h.AccountNumber,
+                        SubTotal = h.SubTotal,
+                        TaxAmt = h.TaxAmt,
+                        Freight= h.Freight,
+                        TotalDue = h.TotalDue,
+                        Details = h.SalesOrderDetails.Select(d => new {
+                          OrderQty = d.OrderQty,
+                          ProductID = d.ProductID,
+                          UnitPrice = d.UnitPrice,
+                          UnitPriceDiscount = d.UnitPriceDiscount,
+                          LineTotal = d.LineTotal
+                        })
+                      }).ToList();
+            }
+      Policy:
+        Concurrency: 1
+        ExecutionPriorityOrder: OldestFirst
+        Retry: 3
+        Timeout: 00:30:00
+        Delay: 00:00:00
+  start: 2016-01-26T00:00:00Z
+  end: 2016-01-26T00:01:00Z

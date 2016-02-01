@@ -1,0 +1,12 @@
+name: SampleDb
+properties:
+    type: CustomDataset
+    linkedServiceName: Database
+    typeProperties:
+        InstanceName: SampleDb
+        DbContextName: FactoryWorker.Sample.SampleDbContext
+        AssemblyFile: <container>/<assemblypath>
+        PackageLinkedService: PackageStorage
+    availability:
+        frequency: Hour
+        interval: 1

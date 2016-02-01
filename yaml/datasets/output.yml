@@ -1,0 +1,12 @@
+name: Output
+properties:
+    type: CustomDataset
+    linkedServiceName: Database
+    typeProperties:
+        Type: AzureBlob
+        Format:
+            Type: json
+        FilePath: <container>/<assemblypath>
+    availability:
+        frequency: Hour
+        interval: 1

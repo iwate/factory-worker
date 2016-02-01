@@ -1,0 +1,6 @@
+name: Database
+properties:
+    description: SqlDatabase's linked service
+    type: AzureSqlDatabase
+    typeProperties:
+        connectionString: Data Source=<svr-name>.database.windows.net;Initial Catalog=<db-name>;User Id=<username>;Password=<password>;
