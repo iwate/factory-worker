@@ -9,6 +9,8 @@ properties:
       type: DotNetActivity
       inputs:
         - name: AdventureWorksLT
+        # Package is dummy for loading PackageStorage LinkedService.
+        - name: Package
       outputs:
         - name: OutputDataset
       linkedServiceName: FactoryWorkerBatch
@@ -139,7 +141,7 @@ properties:
 name: Package
 properties:
   type: CustomDataset
-  linkedServiceName: Storage
+  linkedServiceName: PackageStorage
   typeProperties:
     type: Dummy
   availability:
@@ -156,6 +158,7 @@ properties:
       type: DotNetActivity
       inputs:
         - name: AdventureWorksLT
+        # Package is dummy for loading PackageStorage LinkedService.
         - name: Package
       outputs:
         - name: OutputDataset
