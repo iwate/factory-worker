@@ -26,7 +26,8 @@ namespace FactoryWorker.Activity.Providers
         public CustomAzureBlobProvider(Dataset dataset, LinkedService linkedService, Slice slice)
         {
             var props = dataset.Properties.TypeProperties as CustomDataset;
-            InstanceName = props.ServiceExtraProperties["instanceName"].ToString();
+            if (props.ServiceExtraProperties.ContainsKey("instanceName"))
+                InstanceName = props.ServiceExtraProperties["instanceName"].ToString();
             var enc = props.ServiceExtraProperties.ContainsKey("encoding") 
                 ? props.ServiceExtraProperties["encoding"].ToString() : null;
             if (!string.IsNullOrEmpty(enc))
@@ -67,7 +68,7 @@ namespace FactoryWorker.Activity.Providers
         {
             return dataset.Properties.Type == "CustomDataset" 
                 && linkedService.Properties.Type == "AzureStorage"
-                && ((CustomDataset)dataset.Properties.TypeProperties).ServiceExtraProperties["Type"].ToString() == "AzureBlob";
+                && ((CustomDataset)dataset.Properties.TypeProperties).ServiceExtraProperties["type"].ToString() == "AzureBlob";
         }
         public override dynamic Load(Slice slice)
         {

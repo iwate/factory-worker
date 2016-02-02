@@ -134,6 +134,18 @@ properties:
     frequency: Hour
     interval: 1
 ```
+
+```yml
+name: Package
+properties:
+  type: CustomDataset
+  linkedServiceName: Storage
+  typeProperties:
+    type: Dummy
+  availability:
+    frequency: Hour
+    interval: 1
+```
  
 ###Pipeline
 ```yml
@@ -144,6 +156,7 @@ properties:
       type: DotNetActivity
       inputs:
         - name: AdventureWorksLT
+        - name: Package
       outputs:
         - name: OutputDataset
       linkedServiceName: FactoryWorkerBatch

@@ -21,7 +21,12 @@ namespace FactoryWorker.Activity
             IActivityLogger logger)
         {
             logger.Write("Actiity start.\n");
-            Func<string, LinkedService> linkedServiceResolver = name => linkedServices.Single(_ => _.Name == name);
+            logger.Write(string.Join(", ", linkedServices.Select(_ => _.Name)));
+            Func<string, LinkedService> linkedServiceResolver = name =>
+            {
+                logger.Write("linkedServiceResolver:{0}", name);
+                return linkedServices.Single(_ => _.Name == name);
+            };
             IEnumerable<string> inputNames = activity.Inputs.Select(_ => _.Name);
             IEnumerable<string> outputNames = activity.Outputs.Select(_ => _.Name);
             IList<CustomDbDataset> dbDatasets = new List<CustomDbDataset>();
@@ -71,7 +76,8 @@ namespace FactoryWorker.Activity
                     }
 
                     return new { dataset = datasetName, provider = provider };
-                }).ToDictionary(_ => _.dataset, _ => _.provider);
+                }).Where(_ => _.provider != null).ToDictionary(_ => _.dataset, _ => _.provider);
+            inputNames = inputNames.Where(name => providers.ContainsKey(name)).ToList();
 
             // create model for transform razor.
             dynamic model = new ExpandoObject();
