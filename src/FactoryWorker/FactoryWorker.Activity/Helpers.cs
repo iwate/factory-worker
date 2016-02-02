@@ -39,7 +39,7 @@ namespace FactoryWorker.Activity
             });
             foreach (var partition in partitions)
             {
-                str = str.Replace(partition.Key, partition.Value);
+                str = str.Replace($"{{{partition.Key}}}", partition.Value);
             }
             return str;
         }
