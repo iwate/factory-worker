@@ -14,7 +14,7 @@ properties:
       linkedServiceName: FactoryWorkerBatch
       policy:
         concurrency: 1
-        executionPriorityOrder: OlderFirst
+        executionPriorityOrder: OldestFirst
         retry: 3
         timeout: 00:30:00
         delay: 00:00:00
@@ -111,7 +111,7 @@ properties:
   typeProperties:
     type: EntityFramework
     instanceName: AdventureWorksLT
-    dbContext: FactoryWorker.Sample.SampleDbContext
+    dbContextName: FactoryWorker.Sample.SampleDbContext
     packageLinkedService: PackageStorage
     assemblyFile: <container>/FactoryWorker.Sample.dll
   availability:
@@ -126,15 +126,10 @@ properties:
   linkedServiceName: Storage
   typeProperties:
     type: AzureBlob
-    format:
-      type: json
+    format: json
     filePath: <container>/outputs/{slice}.tsv
-    partitionBy: 
-      - name: slice
-        value:
-          type: DateTime
-          date: SliceStart
-          format: yyyy-MM-dd
+    slice: yyyy-MM-dd, SliceStart
+    test: $$Text.Format('{yyyy-MM-dd}', SliceStart)
   availability:
     frequency: Hour
     interval: 1
@@ -154,7 +149,7 @@ properties:
       linkedServiceName: FactoryWorkerBatch
       policy:
         concurrency: 1
-        executionPriorityOrder: OlderFirst
+        executionPriorityOrder: OldestFirst
         retry: 3
         timeout: 00:30:00
         delay: 00:00:00
@@ -211,7 +206,7 @@ properties:
       type: TextFormat
       rowDelimiter: \n
       columnDelimiter: \t
-    partitionBy: 
+    partitionedBy: 
       - name: slice
         value:
           type: DateTime
@@ -234,7 +229,7 @@ properties:
       linkedServiceName: FactoryWorkerBatch
       policy:
         concurrency: 1
-        executionPriorityOrder: OlderFirst
+        executionPriorityOrder: OldestFirst
         retry: 3
         timeout: 00:30:00
         delay: 00:00:00
@@ -277,16 +272,10 @@ properties:
   linkedServiceName: Storage
   typeProperties:
     type: AzureBlob
-    format:
-      type: json
+    format: json
     instanceName: Orders
     filePath: <container>/outputs/{slice}.tsv
-    partitionBy: 
-      - name: slice
-        value:
-          type: DateTime
-          date: SliceStart
-          format: yyyy-MM-dd
+    slice: yyyy-MM-dd, SliceStart
   availability:
     frequency: Hour
     interval: 1
@@ -305,7 +294,7 @@ properties:
       linkedServiceName: FactoryWorkerBatch
       policy:
         concurrency: 1
-        executionPriorityOrder: OlderFirst
+        executionPriorityOrder: OldestFirst
         retry: 3
         timeout: 00:30:00
         delay: 00:00:00

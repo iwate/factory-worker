@@ -8,6 +8,7 @@ using Microsoft.Azure.Management.DataFactories.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace FactoryWorker.Activity.Providers
 {
@@ -38,25 +39,29 @@ namespace FactoryWorker.Activity.Providers
             }
             
             var filepath = props.ServiceExtraProperties["filePath"].ToString();
-            if (props.ServiceExtraProperties.ContainsKey("partitionedBy"))
+            var regex = new Regex(@"\{(.+?)\}");
+            var matches = regex.Matches(filepath);
+            foreach(Match m in matches)
             {
-                var partitionedBy = props.ServiceExtraProperties["partitionedBy"].Select(_ => new Partition
+                var key = m.Groups[1].Value;
+                if (props.ServiceExtraProperties.ContainsKey(key))
                 {
-                    Name = _["name"].ToString(),
-                    Value = new DateTimePartitionValue
-                    {
-                        Date = _["date"].ToString(),
-                        Format = _["format"].ToString()
-                    }
-                });
-                filepath = Helpers.ReplaceByPatition(filepath, partitionedBy, slice);
+                    var formatAndName = props.ServiceExtraProperties[key].ToString().Split(',').Select(_ => _.Trim()).ToArray();
+                    var value = formatAndName[1].ToLower() == "slicestart" ? slice.Start.ToString(formatAndName[0])
+                              : formatAndName[1].ToLower() == "sliceend" ? slice.End.ToString(formatAndName[0])
+                              : "";
+                    filepath = filepath.Replace($"{{{formatAndName[1]}}}", value);
+                }
             }
             Blob = Helpers.GetBlob(linkedService, filepath);
 
             var format = props.ServiceExtraProperties["format"];
             Format = format == null ? CustomAzureBlobFormat.Unknown
-                   : format["type"].ToString().ToLower() == "json" ? CustomAzureBlobFormat.Json
+                   : format.ToString().ToLower() == "json" ? CustomAzureBlobFormat.Json
                    : CustomAzureBlobFormat.Unknown;
+
+            if (props.ServiceExtraProperties.ContainsKey("test"))
+                Console.Write(props.ServiceExtraProperties["test"].ToString());
         }
         public static bool IsMatch(Dataset dataset, LinkedService linkedService)
         {

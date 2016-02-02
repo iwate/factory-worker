@@ -30,14 +30,14 @@ namespace FactoryWorker.Activity
             var dotNetActivity = (DotNetActivity)activity.TypeProperties;
             Slice slice = new Slice
             {
-                Start = Convert.ToDateTime(dotNetActivity.ExtendedProperties["SliceStart"]),
-                End = Convert.ToDateTime(dotNetActivity.ExtendedProperties["SliceEnd"])
+                Start = Convert.ToDateTime(dotNetActivity.ExtendedProperties["SliceStart"].ToString()),
+                End = Convert.ToDateTime(dotNetActivity.ExtendedProperties["SliceEnd"].ToString())
             };
-            string transform = dotNetActivity.ExtendedProperties["transform"];
+            string transform = dotNetActivity.ExtendedProperties["transform"].ToString();
 
             logger.Write("Slice from {0} to {1}\n", slice.Start, slice.End);
             logger.Write("Transform:\n");
-            logger.Write("{0}\n", transform);
+            //logger.Write("{0}\n", transform);
 
             // create providers
             logger.Write("create providers\n");
