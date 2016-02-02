@@ -1,0 +1,9 @@
+name: Package
+properties:
+  type: CustomDataset
+  linkedServiceName: PackageStorage
+  typeProperties:
+    type: Dummy
+  availability:
+    frequency: Hour
+    interval: 1
