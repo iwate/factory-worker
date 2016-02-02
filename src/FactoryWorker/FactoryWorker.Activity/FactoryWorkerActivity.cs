@@ -21,12 +21,7 @@ namespace FactoryWorker.Activity
             IActivityLogger logger)
         {
             logger.Write("Actiity start.\n");
-            logger.Write(string.Join(", ", linkedServices.Select(_ => _.Name)));
-            Func<string, LinkedService> linkedServiceResolver = name =>
-            {
-                logger.Write("linkedServiceResolver:{0}", name);
-                return linkedServices.Single(_ => _.Name == name);
-            };
+            Func<string, LinkedService> linkedServiceResolver = name => linkedServices.Single(_ => _.Name == name);
             IEnumerable<string> inputNames = activity.Inputs.Select(_ => _.Name);
             IEnumerable<string> outputNames = activity.Outputs.Select(_ => _.Name);
             IList<CustomDbDataset> dbDatasets = new List<CustomDbDataset>();
@@ -41,8 +36,6 @@ namespace FactoryWorker.Activity
             string transform = dotNetActivity.ExtendedProperties["transform"].ToString();
 
             logger.Write("Slice from {0} to {1}\n", slice.Start, slice.End);
-            logger.Write("Transform:\n");
-            //logger.Write("{0}\n", transform);
 
             // create providers
             logger.Write("create providers\n");
