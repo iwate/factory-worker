@@ -61,6 +61,7 @@ properties:
 
 ##How to use
 This sample is that AdventureWorks's orders export to storage as json file.
+
 1. Create environments: Azure DataFactories, Azure Batch, Azure Storage and SqlDatabase.(create SqlDatabase from AdventureWorksLT sample)
 2. Download [FactoryWorker.Activity.zip](https://github.com/iwate/factory-worker/releases/download/v0.5.0/FactoryWorker.Activity.zip) and [FactoryWorker.Sample.dll](https://github.com/iwate/factory-worker/releases/download/v0.5.0/FactoryWorker.Sample.dll) (FacoryWorker.Sample.dll is DbContext lib for AdventureWorksLT)
 3. Upload `FactoryWorker.Activity.zip` and `FactoryWorker.Sample.dll` to Azure Blob storage.
