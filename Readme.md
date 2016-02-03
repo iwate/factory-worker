@@ -30,8 +30,8 @@ properties:
           SliceEnd: $$Text.Format('{0}', SliceEnd)
           transform:|
             @{
-              Logger("Transform Start");
-              ViewBag.Export = AdventureWorksLT.SalesOrderHeaders
+              Logger.Write("Transform Start");
+              ViewBag.Exports = AdventureWorksLT.SalesOrderHeaders
                       .Where(_ => _.OrderDate >= Slice.Start && _.OrderDate < Slice.End)
                       .Select(h => new {
                         SalesOrderID = h.SalesOrderID,
@@ -180,8 +180,8 @@ properties:
           SliceEnd: $$Text.Format('{0}', SliceEnd)
           transform: |
             @{
-              Logger("Transform Start");
-              ViewBag.Export = AdventureWorksLT.SalesOrderHeaders
+              Logger.Write("Transform Start");
+              ViewBag.Exports = AdventureWorksLT.SalesOrderHeaders
                       .Where(_ => _.OrderDate >= Slice.Start && _.OrderDate < Slice.End)
                       .Select(h => new {
                         SalesOrderID = h.SalesOrderID,
@@ -241,6 +241,7 @@ properties:
       type: DotNetActivity
       inputs:
         - name: AdventureWorksLT
+        - name: Package
       outputs:
         - name: OutputDataset
       linkedServiceName: FactoryWorkerBatch
@@ -260,8 +261,8 @@ properties:
           SliceEnd: $$Text.Format('{0}', SliceEnd)
           transform: |
             @{
-              Logger("Transform Start");
-              ViewBag.Export = AdventureWorksLT.SalesOrderHeaders
+              Logger.Write("Transform Start");
+              ViewBag.Exports = AdventureWorksLT.SalesOrderHeaders
                       .Where(_ => _.OrderDate >= Slice.Start && _.OrderDate < Slice.End)
                       .Select(h => new {
                         SalesOrderID = h.SalesOrderID,
